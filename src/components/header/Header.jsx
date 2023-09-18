@@ -3,6 +3,8 @@ import { HiOutlineSearch } from "react-icons/hi";
 import { SlMenu } from "react-icons/sl";
 import { VscChromeClose } from "react-icons/vsc";
 import { useNavigate, useLocation } from "react-router-dom";
+import { FaUserCircle } from "react-icons/fa";
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
 
 import "./style.scss";
 
@@ -18,9 +20,22 @@ const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
+    const [showLogin, setShowLogin] = useState(false);
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
+
+    const toggleLogin = () => {
+        setShowLogin(!showLogin);
+    };
+
+    const handleLogin = () => {
+
+        toggleLogin();
+    };
 
     const controlNavbar = () => {
         if (window.scrollY > 200) {
@@ -92,6 +107,9 @@ const Header = () => {
                     <li className="menuItem">
                         <HiOutlineSearch onClick={openSearch} />
                     </li>
+                    <li className="menuItem" onClick={toggleLogin}>
+                        <FaUserCircle size={25} />
+                    </li>
                 </ul>
 
                 <div className="mobileMenuItems">
@@ -103,6 +121,38 @@ const Header = () => {
                     )}
                 </div>
             </ContentWrapper>
+
+            <Dialog open={showLogin} onClose={showLogin}>
+                <DialogTitle>Login</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        label="Username"
+                        type="text"
+                        fullWidth
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                    />
+                    <TextField
+                        margin="dense"
+                        label="Password"
+                        type="password"
+                        fullWidth
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={toggleLogin} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleLogin} color="primary">
+                        Login
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             {showSearch && (
                 <div className="searchBar">
                     <ContentWrapper>
