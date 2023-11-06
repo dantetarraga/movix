@@ -1,0 +1,26 @@
+.picture-profile {
+    cursor: pointer;
+    position: relative;
+}
+
+.picture-profile img {
+    border-radius: 10px;
+}
+
+.container-icon {
+    display: flex;
+    align-items: center;
+    place-content: center;
+    position: absolute;
+    background: rgb(24, 26, 26);
+    border-radius: 50%;
+    top: 29%;
+    left: 84%;
+    width: 48px;
+    height: 48px;
+}
+
+.edit-icon {
+    cursor: pointer;
+    color: #ffffff;
+}

@@ -1,0 +1,92 @@
+.login {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+
+    &__grid {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        align-items: center;
+    }
+
+    .form__opcions {
+        display: flex;
+        justify-content: space-between;
+        margin: 20px 0 0 0;
+
+        .form__checkbox {
+            margin: 0 0 0 0;
+        }
+
+        .form__link {
+            text-decoration: none;
+            color: #007bff;
+            transition: color 0.3s ease-in-out;
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+
+            &:hover {
+                color: #0056b3;
+            }
+        }
+    }
+
+    .form__register {
+        display: flex;
+        margin-top: 50px;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+
+        .additional-text {
+            text-align: center;
+            color: #999;
+        }
+
+        .subscribe-link {
+            text-decoration: none;
+            color: white;
+            padding: 10px 20px;
+            border: 1px solid white;
+            border-radius: 4px;
+            transition: color 0.3s, border-color 0.3s;
+            cursor: pointer;
+
+            &:hover {
+                border-color: #1976D2;
+                color: #1976D2
+            }
+        }
+    }
+
+    .form__paper {
+        background-color: rgba(3, 3, 3, 0.6);
+        color: #fff;
+    }
+
+    .subscribe-button {
+        margin-top: 10px;
+
+        background-color: #e50914;
+
+        color: white;
+
+        transition: background-color 0.3s;
+
+
+        &:hover {
+            background-color: #ff3c4a;
+
+        }
+    }
+
+}
+
+.icon {
+    color: #fff;
+    margin-right: 10px;
+}

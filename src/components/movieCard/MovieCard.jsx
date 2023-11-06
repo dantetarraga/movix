@@ -10,7 +10,7 @@ import CircleRating from "../circleRating/CircleRating";
 import Genres from "../genres/Genres";
 import PosterFallback from "../../assets/no-poster.png";
 import { AiFillHeart } from "react-icons/ai"
-
+import useFetch from "../../hooks/useFetch";
 
 const MovieCard = ({ data, fromSearch, mediaType }) => {
     const { url } = useSelector((state) => state.home);
@@ -25,10 +25,8 @@ const MovieCard = ({ data, fromSearch, mediaType }) => {
     const handleHeartClick = (itemId) => {
         console.log(itemId)
         if (likedItems.includes(itemId)) {
-            // Si ya se había dado "Me gusta", lo quitamos de la lista
             setLikedItems(likedItems.filter((id) => id !== itemId));
         } else {
-            // Si no se había dado "Me gusta", lo agregamos a la lista
             setLikedItems([...likedItems, itemId]);
         }
         setIsLiked(!isLiked);

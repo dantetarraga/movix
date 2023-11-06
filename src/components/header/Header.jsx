@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from "react";
+import { Button } from "@mui/material";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 import { HiOutlineSearch } from "react-icons/hi";
 import { SlMenu } from "react-icons/sl";
 import { VscChromeClose } from "react-icons/vsc";
-import { useNavigate, useLocation } from "react-router-dom";
-import { FaUserCircle } from "react-icons/fa";
-import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField } from "@mui/material";
-
+import { useLocation, useNavigate } from "react-router-dom";
 import "./style.scss";
 
-import ContentWrapper from "../contentWrapper/ContentWrapper";
 import logo from "../../assets/movix-logo.svg";
+import { useAuth } from "../../auth/AuthContext";
+import ContentWrapper from "../contentWrapper/ContentWrapper";
+import PictureProfile from "../pictureProfile/PictureProfile";
+
 
 const Header = () => {
     const [show, setShow] = useState("top");
@@ -19,23 +21,32 @@ const Header = () => {
     const [showSearch, setShowSearch] = useState("");
     const navigate = useNavigate();
     const location = useLocation();
+    const { authenticated, setAuth } = useAuth();
+    const [showProfileMenu, setShowProfileMenu] = useState(false);
+    const [imageUrl, setImageUrl] = useState('');
 
-    const [showLogin, setShowLogin] = useState(false);
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
+    useEffect(() => {
+        const email = localStorage.getItem('email'); // Reemplaza con la obtención del correo del usuario correcto
+        axios
+            .post('http://localhost:3000/user/imgUser', { email }, { responseType: 'blob' })
+            .then((response) => {
+                if (response.status === 200) {
+                    const blob = new Blob([response.data], { type: 'image/png' });
+                    const imageUrl = URL.createObjectURL(blob);
+                    setImageUrl(imageUrl);
+                } else {
+                    throw new Error('No se pudo obtener la imagen del usuario');
+                }
+            })
+            .catch((error) => {
+                console.error('Error al obtener la imagen:', error);
+            });
+    }, [authenticated]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [location]);
 
-    const toggleLogin = () => {
-        setShowLogin(!showLogin);
-    };
-
-    const handleLogin = () => {
-
-        toggleLogin();
-    };
 
     const controlNavbar = () => {
         if (window.scrollY > 200) {
@@ -57,6 +68,10 @@ const Header = () => {
         };
     }, [lastScrollY]);
 
+    const redirectToProfile = () => {
+        navigate("/profile");
+    }
+
     const searchQueryHandler = (event) => {
         if (event.key === "Enter" && query.length > 0) {
             navigate(`/search/${query}`);
@@ -76,6 +91,11 @@ const Header = () => {
         setShowSearch(false);
     };
 
+    const redirectToLogin = () => {
+        navigate("/login");
+        setMobileMenu(false);
+    }
+
     const navigationHandler = (type) => {
         if (type === "movie") {
             navigate("/explore/movie");
@@ -83,6 +103,21 @@ const Header = () => {
             navigate("/explore/tv");
         }
         setMobileMenu(false);
+    };
+
+    const navigateToFavorites = () => {
+        navigate("/favorites");
+        setMobileMenu(false);
+    }
+
+    const toggleProfileMenu = () => {
+        setShowProfileMenu(!showProfileMenu);
+    };
+
+    const logout = () => {
+        localStorage.removeItem('token');
+        setAuth(false);
+        navigate('/');
     };
 
     return (
@@ -107,9 +142,29 @@ const Header = () => {
                     <li className="menuItem">
                         <HiOutlineSearch onClick={openSearch} />
                     </li>
-                    <li className="menuItem" onClick={toggleLogin}>
-                        <FaUserCircle size={25} />
-                    </li>
+                    {authenticated ? (
+
+                        <>
+                            {/* <li className="menuItem">
+                                <FaYoutube size={30} onClick={navigateToFavorites} />
+                            </li> */}
+                            <li className="menuItem" onClick={toggleProfileMenu}>
+                                <PictureProfile picture={imageUrl} onClick={redirectToProfile} />
+                                {
+                                    showProfileMenu && (
+                                        <ul className="profileMenu">
+                                            <li className="item" onClick={redirectToProfile}>Profile</li>
+                                            <li className="item" onClick={logout}>Log out</li>
+                                        </ul>
+                                    )
+                                }
+                            </li>
+                        </>
+                    ) : (
+                        <Button variant="contained" color="success" onClick={redirectToLogin} style={{ background: '#e50914' }}>
+                            Iniciar Sesion
+                        </Button>
+                    )}
                 </ul>
 
                 <div className="mobileMenuItems">
@@ -122,55 +177,26 @@ const Header = () => {
                 </div>
             </ContentWrapper>
 
-            <Dialog open={showLogin} onClose={showLogin}>
-                <DialogTitle>Login</DialogTitle>
-                <DialogContent>
-                    <TextField
-                        autoFocus
-                        margin="dense"
-                        label="Username"
-                        type="text"
-                        fullWidth
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                    />
-                    <TextField
-                        margin="dense"
-                        label="Password"
-                        type="password"
-                        fullWidth
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={toggleLogin} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleLogin} color="primary">
-                        Login
-                    </Button>
-                </DialogActions>
-            </Dialog>
-
-            {showSearch && (
-                <div className="searchBar">
-                    <ContentWrapper>
-                        <div className="searchInput">
-                            <input
-                                type="text"
-                                placeholder="Search for a movie or tv show...."
-                                onChange={(e) => setQuery(e.target.value)}
-                                onKeyUp={searchQueryHandler}
-                            />
-                            <VscChromeClose
-                                onClick={() => setShowSearch(false)}
-                            />
-                        </div>
-                    </ContentWrapper>
-                </div>
-            )}
-        </header>
+            {
+                showSearch && (
+                    <div className="searchBar">
+                        <ContentWrapper>
+                            <div className="searchInput">
+                                <input
+                                    type="text"
+                                    placeholder="Search for a movie or tv show...."
+                                    onChange={(e) => setQuery(e.target.value)}
+                                    onKeyUp={searchQueryHandler}
+                                />
+                                <VscChromeClose
+                                    onClick={() => setShowSearch(false)}
+                                />
+                            </div>
+                        </ContentWrapper>
+                    </div>
+                )
+            }
+        </header >
     );
 };
 

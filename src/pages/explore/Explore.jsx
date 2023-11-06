@@ -43,6 +43,8 @@ const Explore = () => {
             setPageNum((prev) => prev + 1);
             setLoading(false);
         });
+        // console.log("genders: ", genresData)
+        // console.log("filters: ", filters.with_genres)
     };
 
     const fetchNextPageData = () => {

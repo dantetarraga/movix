@@ -1,0 +1,58 @@
+.signup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+
+    &__grid {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        align-items: center;
+    }
+
+    .form__paper {
+        background-color: rgba(3, 3, 3, 0.6);
+        color: #fff;
+        padding: 50px;
+        text-align: center;
+    }
+}
+
+.header h2 {
+    font-size: 2rem;
+    margin-bottom: 10px;
+}
+
+.header h5 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.header p {
+    font-size: 1rem;
+    margin-bottom: 20px;
+}
+
+/* Estilos para el formulario */
+.signup__grid {
+    margin-top: 20px;
+}
+
+.form__paper {
+    padding: 20px;
+}
+
+.text-field {
+    margin-bottom: 20px;
+}
+
+.submit-button {
+    background-color: #e50914;
+    color: #fff;
+
+    &:hover {
+        background-color: #ff0000;
+    }
+}
